@@ -1,40 +1,144 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Stacklist
+
+A B2B SaaS marketplace for discovering, comparing, and adopting the right tools to scale your team. Built as a realistic Next.js 14 product simulation.
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 14 (Pages Router) |
+| Language | TypeScript (strict, no `any`) |
+| Styling | Tailwind CSS + CSS Modules |
+| Data | Static mock data (`lib/data.ts`) |
+| Rendering | `getStaticProps` / `getStaticPaths` |
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18+
+- npm 9+
+
+### Installation
 
 ```bash
+# Clone or open the project
+cd eval-fe-next
+
+# Install dependencies
+npm install
+
+# Start the development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+### Build for production
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+```bash
+npm run build
+npm start
+```
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+### Lint
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+```bash
+npm run lint
+```
 
-## Learn More
+## Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+eval-fe-next/
+├── components/
+│   ├── filters/          # SearchBar, CategorySidebar, FilterTag
+│   ├── layout/           # Navbar, Footer, PageContainer
+│   ├── products/         # ProductCard, ProductGrid, ProductDetail, PricingTable
+│   └── ui/               # Button, Badge, Card, Input, Tag
+├── lib/
+│   └── data.ts           # 16 mock products, 4 categories, utility fns
+├── pages/
+│   ├── _app.tsx          # App shell with Navbar + Footer
+│   ├── index.tsx         # Homepage (hero, featured grid, category cards)
+│   ├── products/
+│   │   ├── index.tsx     # Full product listing with search + sidebar filter
+│   │   └── [slug].tsx    # Individual product detail page
+│   └── category/
+│       └── [slug].tsx    # Category-filtered product listing
+├── styles/
+│   ├── globals.css       # Tailwind directives + base resets
+│   ├── tokens.css        # CSS custom properties (design tokens)
+│   ├── Home.module.css
+│   ├── Products.module.css
+│   └── Category.module.css
+└── types/
+    └── index.ts          # All TypeScript interfaces and types
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Pages
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+| Route | Description |
+|---|---|
+| `/` | Homepage with hero, featured product grid (tabbed by category), and category cards |
+| `/products` | Full product catalog with live search, sidebar category filter, and sort |
+| `/products/[slug]` | Product detail: description, tags, pricing tier table, request demo CTA |
+| `/category/[slug]` | Category-filtered product listing with hero and cross-links |
 
-## Deploy on Vercel
+## Data Model
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+All products live in `lib/data.ts`. Each product has:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+```typescript
+interface Product {
+  id: string;
+  slug: string;
+  name: string;
+  tagline: string;
+  description: string;
+  category: Category;           // 'Productivity' | 'DevTools' | 'Analytics' | 'CRM'
+  categorySlug: CategorySlug;
+  tags: string[];
+  logoPlaceholder: { initials: string; color: string };
+  pricingTiers: PricingTier[];  // Free / Pro / Enterprise
+  featured: boolean;
+  rating: number;
+  reviewCount: number;
+  website: string;
+}
+```
+
+**16 products across 4 categories:**
+
+- **Productivity** — FlowDesk, NotionFlow, CalStack, Slipbox
+- **DevTools** — PipeForge, LogPilot, SeedEnv, ReviewHub
+- **Analytics** — Lumiq, Trackly, PulseBoard, SegFlow
+- **CRM** — DealPath, SupportIQ, Onboardly, ChurnGuard
+
+## Design System
+
+CSS custom properties are defined in `styles/tokens.css` and cover:
+
+- **Colors** — brand palette (indigo), neutrals, semantic, per-category
+- **Typography** — font sizes, weights, line heights
+- **Spacing** — `--space-1` through `--space-24`
+- **Borders** — radii, widths, colors
+- **Shadows** — `xs` through `xl`
+- **Transitions** — fast / base / slow
+
+Components use CSS Modules for scoped styles, with Tailwind utilities used sparingly for layout and one-off adjustments.
+
+## Component Conventions
+
+- All components are fully typed with TypeScript interfaces
+- No `any` types used
+- Props with sane defaults; no required props where sensible defaults exist
+- CSS Modules named `ComponentName.module.css` alongside the component
+- UI primitives live in `components/ui/`, domain components in their respective folders
+
+## Data Fetching
+
+- `getStaticProps` is used on all listing pages and the homepage
+- `getStaticPaths` is used on `[slug]` routes to pre-render all product and category pages at build time
+- All pages are fully statically generated — no runtime API calls
+- Client-side filtering (search, category, sort) on the products listing page is done with `useMemo`

@@ -1,0 +1,68 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  line-height: 1;
+  border-radius: var(--radius-full);
+  padding: 0.25em 0.625em;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+}
+
+/* Variants */
+.default {
+  background-color: var(--color-neutral-100);
+  color: var(--color-neutral-700);
+}
+
+.brand {
+  background-color: var(--color-brand-100);
+  color: var(--color-brand-700);
+}
+
+.success {
+  background-color: var(--color-success-light);
+  color: #065f46;
+}
+
+.warning {
+  background-color: var(--color-warning-light);
+  color: #92400e;
+}
+
+.error {
+  background-color: var(--color-error-light);
+  color: #991b1b;
+}
+
+/* Category variants */
+.productivity {
+  background-color: var(--color-brand-100);
+  color: var(--color-brand-700);
+}
+
+.devtools {
+  background-color: #e0f2fe;
+  color: #0369a1;
+}
+
+.analytics {
+  background-color: var(--color-warning-light);
+  color: #92400e;
+}
+
+.crm {
+  background-color: var(--color-success-light);
+  color: #065f46;
+}
+
+/* Dot */
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-full);
+  background-color: currentColor;
+  flex-shrink: 0;
+}

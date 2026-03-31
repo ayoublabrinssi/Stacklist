@@ -1,115 +1,179 @@
-import Image from "next/image";
-import localFont from "next/font/local";
+import type { GetStaticProps, NextPage } from 'next';
+import Head from 'next/head';
+import Link from 'next/link';
+import { useState } from 'react';
+import type { Product, CategoryMeta } from '@/types';
+import { CATEGORIES, getFeaturedProducts, getProductsByCategory } from '@/lib/data';
+import Button from '@/components/ui/Button';
+import FilterTag from '@/components/filters/FilterTag';
+import ProductGrid from '@/components/products/ProductGrid';
+import styles from '@/styles/Home.module.css';
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
-
-export default function Home() {
-  return (
-    <div
-      className={`${geistSans.variable} ${geistMono.variable} grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]`}
-    >
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              pages/index.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+interface HomeProps {
+  featuredProducts: Product[];
+  categories: CategoryMeta[];
 }
+
+const getStaticProps: GetStaticProps<HomeProps> = async () => {
+  return {
+    props: {
+      featuredProducts: getFeaturedProducts(),
+      categories: CATEGORIES,
+    },
+  };
+};
+
+export { getStaticProps };
+
+const Home: NextPage<HomeProps> = ({ featuredProducts, categories }) => {
+  const [activeTab, setActiveTab] = useState<string>('all');
+
+  const displayProducts =
+    activeTab === 'all'
+      ? featuredProducts
+      : featuredProducts.filter((p) => p.categorySlug === activeTab);
+
+  const categoryProductCounts = categories.reduce<Record<string, number>>((acc, cat) => {
+    acc[cat.slug] = getProductsByCategory(cat.slug).length;
+    return acc;
+  }, {});
+
+  return (
+    <>
+      <Head>
+        <title>Stacklist — Discover the Best B2B SaaS Tools</title>
+        <meta
+          name="description"
+          content="Stacklist is the B2B SaaS marketplace for discovering, comparing, and adopting the right tools to scale your business."
+        />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+
+      {/* Hero */}
+      <section className={styles.hero}>
+        <div className={styles.heroInner}>
+          <div className={styles.eyebrow}>
+            <span className={styles.eyebrowDot} />
+            16+ tools across 4 categories
+          </div>
+          <h1 className={styles.heroTitle}>
+            Find the right <span>B2B tools</span> for your team
+          </h1>
+          <p className={styles.heroSubtitle}>
+            Stacklist curates the best SaaS software across productivity, developer tooling,
+            analytics, and CRM — with real pricing, honest reviews, and side-by-side comparisons.
+          </p>
+          <div className={styles.heroActions}>
+            <Button href="/products" size="lg" variant="primary">
+              Browse all tools →
+            </Button>
+            <Button href="/category/devtools" size="lg" variant="secondary">
+              Explore DevTools
+            </Button>
+          </div>
+          <div className={styles.heroStats}>
+            <div className={styles.stat}>
+              <div className={styles.statNumber}>16+</div>
+              <div className={styles.statLabel}>Tools listed</div>
+            </div>
+            <div className={styles.stat}>
+              <div className={styles.statNumber}>4</div>
+              <div className={styles.statLabel}>Categories</div>
+            </div>
+            <div className={styles.stat}>
+              <div className={styles.statNumber}>10k+</div>
+              <div className={styles.statLabel}>Reviews</div>
+            </div>
+            <div className={styles.stat}>
+              <div className={styles.statNumber}>Free</div>
+              <div className={styles.statLabel}>Always</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Category tabs + featured grid */}
+      <section className={styles.categorySection}>
+        <div className={styles.sectionHeader}>
+          <h2 className={styles.sectionTitle}>Featured tools</h2>
+          <Link href="/products" className={styles.sectionLink}>
+            View all →
+          </Link>
+        </div>
+
+        <div className={styles.tabs} role="tablist" aria-label="Filter by category">
+          <FilterTag
+            label="All"
+            count={featuredProducts.length}
+            active={activeTab === 'all'}
+            onClick={() => setActiveTab('all')}
+          />
+          {categories.map((cat) => (
+            <FilterTag
+              key={cat.slug}
+              label={cat.name}
+              count={featuredProducts.filter((p) => p.categorySlug === cat.slug).length}
+              active={activeTab === cat.slug}
+              onClick={() => setActiveTab(cat.slug)}
+            />
+          ))}
+        </div>
+      </section>
+
+      <section className={styles.featuredSection}>
+        <ProductGrid
+          products={displayProducts}
+          emptyMessage="No featured tools in this category yet. Check back soon!"
+        />
+      </section>
+
+      {/* Category promo cards */}
+      <section className={styles.categoriesPromo}>
+        <div className={styles.categoriesInner}>
+          <h2 className={styles.categoriesTitle}>Browse by category</h2>
+          <p className={styles.categoriesSubtitle}>
+            Each category is hand-curated with the top-rated tools in that space.
+          </p>
+
+          <div className={styles.categoriesGrid}>
+            {categories.map((cat) => (
+              <Link
+                key={cat.slug}
+                href={`/category/${cat.slug}`}
+                className={styles.categoryCard}
+              >
+                <div className={styles.categoryIcon}>{cat.icon}</div>
+                <div className={styles.categoryCardName}>{cat.name}</div>
+                <p className={styles.categoryCardDesc}>{cat.description}</p>
+                <div className={styles.categoryCardCount}>
+                  {categoryProductCounts[cat.slug]} tools
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Banner */}
+      <section className={styles.ctaBanner}>
+        <div className={styles.ctaInner}>
+          <h2 className={styles.ctaTitle}>Ready to build your stack?</h2>
+          <p className={styles.ctaSubtitle}>
+            Compare tools, read honest reviews, and find the right fit for your team — free forever.
+          </p>
+          <div className={styles.ctaActions}>
+            <Button href="/products" size="lg" variant="primary">
+              Start exploring →
+            </Button>
+            <Button href="#" size="lg" className={styles.ctaSecondary} variant="secondary">
+              List your product
+            </Button>
+          </div>
+        </div>
+      </section>
+    </>
+  );
+};
+
+export default Home;
