@@ -1,26 +1,24 @@
 import React from 'react';
 import Link from 'next/link';
+import { CATEGORIES } from '@/lib/data';
 import styles from './Footer.module.css';
 
 const FOOTER_LINKS = {
   Product: [
     { href: '/products', label: 'Browse Tools' },
-    { href: '/category/productivity', label: 'Productivity' },
-    { href: '/category/devtools', label: 'DevTools' },
-    { href: '/category/analytics', label: 'Analytics' },
-    { href: '/category/crm', label: 'CRM' },
+    ...CATEGORIES.map((cat) => ({ href: `/category/${cat.slug}`, label: cat.name })),
   ],
   Company: [
-    { href: '#', label: 'About' },
-    { href: '#', label: 'Blog' },
-    { href: '#', label: 'Careers' },
-    { href: '#', label: 'Press' },
+    { href: '/coming-soon', label: 'About' },
+    { href: '/coming-soon', label: 'Blog' },
+    { href: '/coming-soon', label: 'Careers' },
+    { href: '/coming-soon', label: 'Press' },
   ],
   Resources: [
-    { href: '#', label: 'Documentation' },
-    { href: '#', label: 'API Reference' },
-    { href: '#', label: 'Community' },
-    { href: '#', label: 'Support' },
+    { href: '/coming-soon', label: 'Documentation' },
+    { href: '/coming-soon', label: 'API Reference' },
+    { href: '/coming-soon', label: 'Community' },
+    { href: '/coming-soon', label: 'Support' },
   ],
 };
 
@@ -56,9 +54,9 @@ export default function Footer() {
         <div className={styles.bottom}>
           <p>© {new Date().getFullYear()} Stacklist, Inc. All rights reserved.</p>
           <nav className={styles.legal} aria-label="Legal navigation">
-            <Link href="#">Privacy Policy</Link>
-            <Link href="#">Terms of Service</Link>
-            <Link href="#">Cookie Policy</Link>
+            <Link href="/coming-soon">Privacy Policy</Link>
+            <Link href="/coming-soon">Terms of Service</Link>
+            <Link href="/coming-soon">Cookie Policy</Link>
           </nav>
         </div>
       </div>

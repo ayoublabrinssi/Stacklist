@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { useState, useMemo } from 'react';
 import type { Product, CategoryMeta, CategorySlug, SortOption } from '@/types';
 import { PRODUCTS, CATEGORIES } from '@/lib/data';
+import { searchProducts } from '@/lib/utils';
 import SearchBar from '@/components/filters/SearchBar';
 import CategorySidebar from '@/components/filters/CategorySidebar';
 import ProductGrid from '@/components/products/ProductGrid';
@@ -27,6 +28,13 @@ const ProductsPage: NextPage<ProductsPageProps> = ({ products, categories }) => 
   const [activeCategory, setActiveCategory] = useState<CategorySlug | 'all'>('all');
   const [sort, setSort] = useState<SortOption>('featured');
 
+  const categoryCounts = useMemo(() => {
+    return products.reduce<Record<string, number>>((acc, p) => {
+      acc[p.categorySlug] = (acc[p.categorySlug] || 0) + 1;
+      return acc;
+    }, {});
+  }, [products]);
+
   const filtered = useMemo(() => {
     let result = products;
 
@@ -35,14 +43,7 @@ const ProductsPage: NextPage<ProductsPageProps> = ({ products, categories }) => 
     }
 
     if (search.trim()) {
-      const q = search.toLowerCase().trim();
-      result = result.filter(
-        (p) =>
-          p.name.toLowerCase().includes(q) ||
-          p.tagline.toLowerCase().includes(q) ||
-          p.description.toLowerCase().includes(q) ||
-          p.tags.some((t) => t.toLowerCase().includes(q))
-      );
+      result = searchProducts(result, search);
     }
 
     switch (sort) {
@@ -91,6 +92,8 @@ const ProductsPage: NextPage<ProductsPageProps> = ({ products, categories }) => 
               categories={categories}
               activeCategory={activeCategory}
               onCategoryChange={setActiveCategory}
+              totalProducts={products.length}
+              categoryCounts={categoryCounts}
             />
           </aside>
 

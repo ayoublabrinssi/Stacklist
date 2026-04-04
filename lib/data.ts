@@ -1,29 +1,30 @@
+import { CATEGORY_MAP } from '@/types';
 import type { Product, CategoryMeta, CategorySlug } from '@/types';
 
 export const CATEGORIES: CategoryMeta[] = [
   {
-    name: 'Productivity',
+    name: CATEGORY_MAP.productivity,
     slug: 'productivity',
     description: 'Tools to streamline workflows, manage tasks, and keep teams aligned.',
     color: '#6366f1',
     icon: '⚡',
   },
   {
-    name: 'DevTools',
+    name: CATEGORY_MAP.devtools,
     slug: 'devtools',
     description: 'Developer infrastructure, CI/CD, monitoring, and code quality tools.',
     color: '#0ea5e9',
     icon: '🛠',
   },
   {
-    name: 'Analytics',
+    name: CATEGORY_MAP.analytics,
     slug: 'analytics',
     description: 'Data pipelines, dashboards, and business intelligence platforms.',
     color: '#f59e0b',
     icon: '📊',
   },
   {
-    name: 'CRM',
+    name: CATEGORY_MAP.crm,
     slug: 'crm',
     description: 'Customer relationship management, sales automation, and support tools.',
     color: '#10b981',
@@ -861,14 +862,4 @@ export function getCategoryBySlug(slug: string): CategoryMeta | undefined {
   return CATEGORIES.find((c) => c.slug === slug);
 }
 
-export function searchProducts(query: string): Product[] {
-  const q = query.toLowerCase().trim();
-  if (!q) return PRODUCTS;
-  return PRODUCTS.filter(
-    (p) =>
-      p.name.toLowerCase().includes(q) ||
-      p.tagline.toLowerCase().includes(q) ||
-      p.description.toLowerCase().includes(q) ||
-      p.tags.some((t) => t.toLowerCase().includes(q))
-  );
-}
+

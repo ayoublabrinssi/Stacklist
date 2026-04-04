@@ -1,0 +1,66 @@
+.container {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-12) var(--space-6);
+}
+
+.content {
+  text-align: center;
+  max-width: 480px;
+}
+
+.icon {
+  font-size: var(--font-size-6xl);
+  margin-bottom: var(--space-6);
+  font-weight: var(--font-weight-extrabold);
+  color: var(--color-brand-600);
+}
+
+.title {
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-neutral-900);
+  margin-bottom: var(--space-4);
+  letter-spacing: -0.02em;
+}
+
+.description {
+  font-size: var(--font-size-lg);
+  color: var(--color-neutral-600);
+  line-height: var(--line-height-relaxed);
+  margin-bottom: var(--space-6);
+}
+
+.missingList {
+  text-align: left;
+  background-color: var(--color-neutral-50);
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6) var(--space-8);
+  margin-bottom: var(--space-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.missingItem {
+  color: var(--color-neutral-700);
+  font-size: var(--font-size-base);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.bullet {
+  color: var(--color-brand-500);
+  font-size: var(--font-size-xl);
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}

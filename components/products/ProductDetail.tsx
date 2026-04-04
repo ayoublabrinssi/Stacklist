@@ -5,6 +5,7 @@ import Badge from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
 import Tag from '@/components/ui/Tag';
 import PricingTable from './PricingTable';
+import { CATEGORY_VARIANT_MAP } from '@/lib/utils';
 import styles from './ProductDetail.module.css';
 
 interface ProductDetailProps {
@@ -12,14 +13,7 @@ interface ProductDetailProps {
 }
 
 export default function ProductDetail({ product }: ProductDetailProps) {
-  const categoryVariantMap: Record<string, 'productivity' | 'devtools' | 'analytics' | 'crm'> = {
-    productivity: 'productivity',
-    devtools: 'devtools',
-    analytics: 'analytics',
-    crm: 'crm',
-  };
-
-  const badgeVariant = categoryVariantMap[product.categorySlug] ?? 'default';
+  const badgeVariant = CATEGORY_VARIANT_MAP[product.categorySlug] ?? 'default';
 
   return (
     <article className={styles.wrapper}>
@@ -63,8 +57,8 @@ export default function ProductDetail({ product }: ProductDetailProps) {
             </div>
           </div>
 
-          <div className={styles.heroCta} style={{ marginTop: 'var(--space-6)' }}>
-            <Button href="#request-demo" variant="primary" size="lg">
+          <div className={styles.heroCta}>
+            <Button href="/coming-soon" variant="primary" size="lg">
               Request a Demo
             </Button>
             <Button href={product.website} variant="secondary" size="lg">
@@ -111,10 +105,10 @@ export default function ProductDetail({ product }: ProductDetailProps) {
           Book a 30-minute demo with a product specialist.
         </p>
         <div className={styles.demoActions}>
-          <Button href="#" variant="primary" size="lg">
+          <Button href="/coming-soon" variant="primary" size="lg">
             Request Demo
           </Button>
-          <Button href="#" size="lg" className={styles.demoSecondary} variant="secondary">
+          <Button href="/coming-soon" size="lg" className={styles.demoSecondary} variant="secondary">
             Start free trial
           </Button>
         </div>

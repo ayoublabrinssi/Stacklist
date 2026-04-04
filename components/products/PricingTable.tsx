@@ -32,8 +32,11 @@ export default function PricingTable({ tiers, productName }: PricingTableProps) 
         Simple, transparent pricing
       </h2>
       <p className={styles.sectionSubtitle}>
-        Start for free, scale as you grow. All plans include a 14-day free trial of{' '}
-        {productName} Pro.
+        Start for free, scale as you grow.
+        {tiers.some((t) => t.trialDays) &&
+          ` All plans include a ${
+            tiers.find((t) => t.trialDays)?.trialDays
+          }-day free trial of ${productName} Pro.`}
       </p>
 
       <div className={styles.tiers}>
@@ -68,8 +71,8 @@ export default function PricingTable({ tiers, productName }: PricingTableProps) 
             </div>
 
             <ul className={styles.featureList} aria-label={`${tier.name} plan features`}>
-              {tier.features.map((feature) => (
-                <li key={feature} className={styles.feature}>
+              {tier.features.map((feature, featureIndex) => (
+                <li key={`${tier.name}-feature-${featureIndex}`} className={styles.feature}>
                   <CheckIcon />
                   {feature}
                 </li>
@@ -80,7 +83,7 @@ export default function PricingTable({ tiers, productName }: PricingTableProps) 
               <Button
                 variant={tier.highlighted ? 'primary' : 'secondary'}
                 fullWidth
-                href="#"
+                href="/coming-soon"
               >
                 {tier.cta}
               </Button>

@@ -5,7 +5,7 @@ import styles from './ProductGrid.module.css';
 
 interface ProductGridProps {
   products: Product[];
-  emptyMessage?: string;
+  emptyMessage?: string | React.ReactNode;
 }
 
 export default function ProductGrid({

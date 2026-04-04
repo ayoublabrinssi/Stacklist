@@ -45,7 +45,7 @@ export default function Button({
 
   if ('href' in rest && rest.href !== undefined) {
     const { href, target, rel } = rest as ButtonAsLink;
-    const isExternal = href.startsWith('http');
+    const isExternal = /^(https?:\/\/|mailto:|tel:|\/\/)/.test(href);
     if (isExternal) {
       return (
         <a

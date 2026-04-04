@@ -1,6 +1,12 @@
-export type Category = 'Productivity' | 'DevTools' | 'Analytics' | 'CRM';
+export const CATEGORY_MAP = {
+  productivity: 'Productivity',
+  devtools: 'DevTools',
+  analytics: 'Analytics',
+  crm: 'CRM',
+} as const;
 
-export type CategorySlug = 'productivity' | 'devtools' | 'analytics' | 'crm';
+export type CategorySlug = keyof typeof CATEGORY_MAP;
+export type Category = (typeof CATEGORY_MAP)[CategorySlug];
 
 export interface PricingTier {
   name: 'Free' | 'Pro' | 'Enterprise';
@@ -10,6 +16,7 @@ export interface PricingTier {
   features: string[];
   cta: string;
   highlighted?: boolean;
+  trialDays?: number;
 }
 
 export interface Product {

@@ -3,7 +3,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useState } from 'react';
 import type { Product, CategoryMeta } from '@/types';
-import { CATEGORIES, getFeaturedProducts, getProductsByCategory } from '@/lib/data';
+import { CATEGORIES, PRODUCTS, getFeaturedProducts, getProductsByCategory } from '@/lib/data';
 import Button from '@/components/ui/Button';
 import FilterTag from '@/components/filters/FilterTag';
 import ProductGrid from '@/components/products/ProductGrid';
@@ -12,20 +12,22 @@ import styles from '@/styles/Home.module.css';
 interface HomeProps {
   featuredProducts: Product[];
   categories: CategoryMeta[];
+  totalProducts: number;
+  totalReviews: number;
 }
 
-const getStaticProps: GetStaticProps<HomeProps> = async () => {
+export const getStaticProps: GetStaticProps<HomeProps> = async () => {
   return {
     props: {
       featuredProducts: getFeaturedProducts(),
       categories: CATEGORIES,
+      totalProducts: PRODUCTS.length,
+      totalReviews: PRODUCTS.reduce((acc, p) => acc + p.reviewCount, 0),
     },
   };
 };
 
-export { getStaticProps };
-
-const Home: NextPage<HomeProps> = ({ featuredProducts, categories }) => {
+const Home: NextPage<HomeProps> = ({ featuredProducts, categories, totalProducts, totalReviews }) => {
   const [activeTab, setActiveTab] = useState<string>('all');
 
   const displayProducts =
@@ -55,7 +57,7 @@ const Home: NextPage<HomeProps> = ({ featuredProducts, categories }) => {
         <div className={styles.heroInner}>
           <div className={styles.eyebrow}>
             <span className={styles.eyebrowDot} />
-            16+ tools across 4 categories
+            {totalProducts}+ tools across {categories.length} categories
           </div>
           <h1 className={styles.heroTitle}>
             Find the right <span>B2B tools</span> for your team
@@ -74,15 +76,15 @@ const Home: NextPage<HomeProps> = ({ featuredProducts, categories }) => {
           </div>
           <div className={styles.heroStats}>
             <div className={styles.stat}>
-              <div className={styles.statNumber}>16+</div>
+              <div className={styles.statNumber}>{totalProducts}+</div>
               <div className={styles.statLabel}>Tools listed</div>
             </div>
             <div className={styles.stat}>
-              <div className={styles.statNumber}>4</div>
+              <div className={styles.statNumber}>{categories.length}</div>
               <div className={styles.statLabel}>Categories</div>
             </div>
             <div className={styles.stat}>
-              <div className={styles.statNumber}>10k+</div>
+              <div className={styles.statNumber}>{Math.floor(totalReviews / 1000)}k+</div>
               <div className={styles.statLabel}>Reviews</div>
             </div>
             <div className={styles.stat}>
@@ -124,7 +126,19 @@ const Home: NextPage<HomeProps> = ({ featuredProducts, categories }) => {
       <section className={styles.featuredSection}>
         <ProductGrid
           products={displayProducts}
-          emptyMessage="No featured tools in this category yet. Check back soon!"
+          emptyMessage={
+            <>
+              No featured tools in this category yet. Check back soon!<br/><br/>
+              {activeTab !== 'all' && (
+                <Link
+                  href={`/category/${activeTab}`}
+                  style={{ color: 'var(--color-brand-600)', fontWeight: 500, textDecoration: 'underline' }}
+                >
+                  See all {categories.find((c) => c.slug === activeTab)?.name} tools →
+                </Link>
+              )}
+            </>
+          }
         />
       </section>
 
@@ -166,7 +180,7 @@ const Home: NextPage<HomeProps> = ({ featuredProducts, categories }) => {
             <Button href="/products" size="lg" variant="primary">
               Start exploring →
             </Button>
-            <Button href="#" size="lg" className={styles.ctaSecondary} variant="secondary">
+            <Button href="/coming-soon" size="lg" className={styles.ctaSecondary} variant="secondary">
               List your product
             </Button>
           </div>

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import type { Product } from '@/types';
 import Badge from '@/components/ui/Badge';
 import Tag from '@/components/ui/Tag';
+import { getStartingPrice, CATEGORY_VARIANT_MAP } from '@/lib/utils';
 import styles from './ProductCard.module.css';
 
 interface ProductCardProps {
@@ -13,31 +14,14 @@ function StarRating({ rating }: { rating: number }) {
   return (
     <span className={styles.star} aria-hidden="true">
       {'★'.repeat(Math.round(rating))}
+      {'☆'.repeat(5 - Math.round(rating))}
     </span>
   );
-}
 
-function getStartingPrice(product: Product): string {
-  const freeTier = product.pricingTiers.find((t) => t.name === 'Free' && t.price === 0);
-  if (freeTier) return 'Free plan available';
-
-  const proTier = product.pricingTiers.find((t) => t.name === 'Pro' && t.price !== null);
-  if (proTier && proTier.price !== null) {
-    return `From $${proTier.price}/mo`;
-  }
-
-  return 'Custom pricing';
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
-  const categoryVariantMap: Record<string, 'productivity' | 'devtools' | 'analytics' | 'crm'> = {
-    productivity: 'productivity',
-    devtools: 'devtools',
-    analytics: 'analytics',
-    crm: 'crm',
-  };
-
-  const badgeVariant = categoryVariantMap[product.categorySlug] ?? 'default';
+  const badgeVariant = CATEGORY_VARIANT_MAP[product.categorySlug] ?? 'default';
 
   return (
     <Link href={`/products/${product.slug}`} className={styles.card}>

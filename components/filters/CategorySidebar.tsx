@@ -1,6 +1,5 @@
 import React from 'react';
 import type { CategoryMeta, CategorySlug } from '@/types';
-import { PRODUCTS } from '@/lib/data';
 import styles from './CategorySidebar.module.css';
 
 type ActiveCategory = CategorySlug | 'all';
@@ -9,18 +8,17 @@ interface CategorySidebarProps {
   categories: CategoryMeta[];
   activeCategory: ActiveCategory;
   onCategoryChange: (slug: ActiveCategory) => void;
+  totalProducts: number;
+  categoryCounts: Record<string, number>;
 }
 
 export default function CategorySidebar({
   categories,
   activeCategory,
   onCategoryChange,
+  totalProducts,
+  categoryCounts,
 }: CategorySidebarProps) {
-  const totalCount = PRODUCTS.length;
-
-  const countByCategory = (slug: CategorySlug) =>
-    PRODUCTS.filter((p) => p.categorySlug === slug).length;
-
   return (
     <nav className={styles.sidebar} aria-label="Filter by category">
       <div className={styles.sidebarTitle}>Categories</div>
@@ -37,7 +35,7 @@ export default function CategorySidebar({
           <span className={styles.dot} style={{ backgroundColor: '#9ca3af' }} />
           All Tools
         </span>
-        <span className={styles.count}>{totalCount}</span>
+        <span className={styles.count}>{totalProducts}</span>
       </button>
 
       <div className={styles.divider} />
@@ -56,7 +54,7 @@ export default function CategorySidebar({
             <span className={styles.dot} style={{ backgroundColor: cat.color }} />
             {cat.name}
           </span>
-          <span className={styles.count}>{countByCategory(cat.slug)}</span>
+          <span className={styles.count}>{categoryCounts[cat.slug] || 0}</span>
         </button>
       ))}
     </nav>
