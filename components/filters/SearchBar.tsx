@@ -1,5 +1,4 @@
 import React from 'react';
-import styles from './SearchBar.module.css';
 
 interface SearchBarProps {
   value: string;
@@ -15,8 +14,8 @@ export default function SearchBar({
   className = '',
 }: SearchBarProps) {
   return (
-    <div className={[styles.wrapper, className].filter(Boolean).join(' ')}>
-      <span className={styles.icon} aria-hidden="true">
+    <div className={`relative flex items-center w-full max-w-2xl group ${className}`}>
+      <span className="absolute left-4 text-slate-400 group-focus-within:text-brand-500 transition-colors pointer-events-none" aria-hidden="true">
         <svg
           width="18"
           height="18"
@@ -33,7 +32,7 @@ export default function SearchBar({
       </span>
       <input
         type="search"
-        className={styles.input}
+        className="w-full h-12 pl-11 pr-10 text-base text-slate-900 bg-white border border-slate-200 rounded-xl transition-all shadow-sm placeholder:text-slate-400 focus:outline-none focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 hover:border-slate-300"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
@@ -41,7 +40,7 @@ export default function SearchBar({
       />
       {value && (
         <button
-          className={styles.clearBtn}
+          className="absolute right-3 p-1 text-slate-400 hover:text-slate-600 rounded-md transition-colors  "
           onClick={() => onChange('')}
           aria-label="Clear search"
           type="button"

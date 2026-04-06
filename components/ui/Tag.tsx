@@ -1,5 +1,4 @@
 import React from 'react';
-import styles from './Tag.module.css';
 
 interface TagProps {
   children: React.ReactNode;
@@ -16,14 +15,15 @@ export default function Tag({
   showHash = true,
   className = '',
 }: TagProps) {
-  const classes = [
-    styles.tag,
-    onClick ? styles.clickable : '',
-    active ? styles.active : '',
-    className,
-  ]
-    .filter(Boolean)
-    .join(' ');
+  const baseStyles = 'inline-flex items-center gap-1 text-xs font-medium rounded-md px-2 py-0.5 whitespace-nowrap tracking-wide leading-tight transition-colors duration-150 border';
+  
+  const stateStyles = active
+    ? 'bg-brand-100 text-brand-700 border-brand-300'
+    : onClick
+    ? 'text-slate-600 bg-slate-100 border-slate-200 hover:bg-brand-50 hover:text-brand-700 hover:border-brand-200 cursor-pointer'
+    : 'text-slate-600 bg-slate-100 border-slate-200';
+
+  const classes = [baseStyles, stateStyles, className].filter(Boolean).join(' ');
 
   if (onClick) {
     return (
@@ -33,7 +33,7 @@ export default function Tag({
         onClick={onClick}
         aria-pressed={active}
       >
-        {showHash && <span className={styles.hash}>#</span>}
+        {showHash && <span className="opacity-50 select-none">#</span>}
         {children}
       </button>
     );
@@ -41,7 +41,7 @@ export default function Tag({
 
   return (
     <span className={classes}>
-      {showHash && <span className={styles.hash}>#</span>}
+      {showHash && <span className="opacity-50 select-none">#</span>}
       {children}
     </span>
   );

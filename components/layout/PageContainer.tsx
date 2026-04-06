@@ -1,5 +1,4 @@
 import React from 'react';
-import styles from './PageContainer.module.css';
 
 interface PageContainerProps {
   children: React.ReactNode;
@@ -14,12 +13,17 @@ export default function PageContainer({
   className = '',
   as: Tag = 'div',
 }: PageContainerProps) {
+  const widthClasses = {
+    narrow: 'max-w-4xl',
+    default: 'max-w-7xl',
+    wide: 'max-w-[90rem]',
+  };
+
   return (
     <Tag
       className={[
-        styles.container,
-        width === 'narrow' ? styles.narrow : '',
-        width === 'wide' ? styles.wide : '',
+        'w-full mx-auto px-4 sm:px-6',
+        widthClasses[width],
         className,
       ]
         .filter(Boolean)

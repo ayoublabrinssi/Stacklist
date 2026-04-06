@@ -1,7 +1,6 @@
 import React from 'react';
 import type { Product } from '@/types';
 import ProductCard from './ProductCard';
-import styles from './ProductGrid.module.css';
 
 interface ProductGridProps {
   products: Product[];
@@ -13,12 +12,12 @@ export default function ProductGrid({
   emptyMessage = 'No products found.',
 }: ProductGridProps) {
   return (
-    <div className={styles.grid}>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
       {products.length === 0 ? (
-        <div className={styles.empty}>
-          <div className={styles.emptyIcon}>🔍</div>
-          <div className={styles.emptyTitle}>No results found</div>
-          <p className={styles.emptyText}>{emptyMessage}</p>
+        <div className="col-span-full flex flex-col items-center justify-center p-16 text-center bg-white border border-slate-200 rounded-xl border-dashed">
+          <div className="text-5xl mb-4 opacity-50">🔍</div>
+          <div className="text-xl font-semibold text-slate-700 mb-2">No results found</div>
+          <p className="text-sm text-slate-500 max-w-sm">{emptyMessage}</p>
         </div>
       ) : (
         products.map((product) => <ProductCard key={product.id} product={product} />)
