@@ -177,12 +177,10 @@ export default function Navbar() {
             </div>
           ) : (
             /* ── Logged-out: Sign in / Get started ── */
-            <>
-              <div className="hidden md:block">
-                <Button href="/login" variant="secondary" size="sm">Sign in</Button>
-              </div>
+            <div className="hidden md:flex items-center gap-3">
+              <Button href="/login" variant="secondary" size="sm">Sign in</Button>
               <Button href="/signup" variant="primary" size="sm">Get started</Button>
-            </>
+            </div>
           )}
 
           {/* Mobile hamburger */}
